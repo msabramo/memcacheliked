@@ -20,6 +20,13 @@ class ClientError(Exception): pass
 class ServerError(Exception): pass
 
 class Memcacheliked(object):
+    """Abstract memcache interface object
+
+    Inherit this class and implement command_* methods. Each needs
+    to be decorated with @{retrieval,storage,deletion}_command to
+    verify / process the arguments properly.
+    """
+
     def __init__(self, timeout=60*60):
         self.timeout = timeout
 
