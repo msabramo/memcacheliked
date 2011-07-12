@@ -9,5 +9,6 @@ setup(name='memcacheliked',
         packages=['memcacheliked'],
         requires=['diesel'],
         license='MIT',
+		  url='https://bitbucket.org/ViciousRedBeam/memcacheliked',
         )
 
