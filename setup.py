@@ -8,5 +8,6 @@ setup(name='memcacheliked',
         author_email='vicious.red.beam@gmail.com',
         packages=['memcacheliked'],
         requires=['diesel'],
+        license='MIT',
         )
 
