@@ -7,7 +7,7 @@ setup(name='memcacheliked',
         author='Vicious Red Beam',
         author_email='vicious.red.beam@gmail.com',
         packages=['memcacheliked'],
-        requires=['diesel'],
+        install_requires=['diesel'],
         license='MIT',
 		  url='https://bitbucket.org/ViciousRedBeam/memcacheliked',
         )
