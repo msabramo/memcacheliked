@@ -1,0 +1,12 @@
+syntax: glob
+build/*
+*.pyc
+*komodo*
+*.c
+dist/*
+*.egg-info*
+dist
+*.swp
+*.egg
+.tox
+MANIFEST
