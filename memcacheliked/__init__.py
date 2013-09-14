@@ -28,7 +28,9 @@ STORAGE_STATUS_STORED = 'STORED'
 STORAGE_STATUS_NOT_STORED = 'NOT_STORED'
 STORAGE_STATUS_EXISTS = 'EXISTS'
 STORAGE_STATUS_NOT_FOUND = 'NOT_FOUND'
-STORAGE_STATUSES = set([STORAGE_STATUS_STORED, STORAGE_STATUS_NOT_STORED, STORAGE_STATUS_EXISTS, STORAGE_STATUS_NOT_FOUND])
+STORAGE_STATUSES = set([
+    STORAGE_STATUS_STORED, STORAGE_STATUS_NOT_STORED, STORAGE_STATUS_EXISTS,
+    STORAGE_STATUS_NOT_FOUND])
 
 DELETION_STATUS_DELETED = 'DELETED'
 DELETION_STATUS_NOT_FOUND = 'NOT_FOUND'
@@ -36,10 +38,17 @@ DELETION_STATUSES = set([DELETION_STATUS_DELETED, DELETION_STATUS_NOT_FOUND])
 
 VALUE_READ_TIMEOUT = 60
 
-class ClientError(Exception): pass
-class ServerError(Exception): pass
+
+class ClientError(Exception):
+    pass
+
+
+class ServerError(Exception):
+    pass
+
 
 class Memcacheliked(object):
+
     """Abstract memcache interface object
 
     Inherit this class and implement command_* methods. Each needs
@@ -47,14 +56,14 @@ class Memcacheliked(object):
     verify / process the arguments properly.
     """
 
-    def __init__(self, timeout=60*60):
+    def __init__(self, timeout=60 * 60):
         self.timeout = timeout
 
     def _connection_handler(self, address):
         try:
             log.info('got incoming connection from <%s>' % (address,))
             while True:
-                ev, msg = first(until_eol = True, sleep = self.timeout)
+                ev, msg = first(until_eol=True, sleep=self.timeout)
                 if ev == 'sleep':
                     log.warn('connection to <%s> timed out' % (address,))
                     break
@@ -88,6 +97,7 @@ class Memcacheliked(object):
         self.app.add_service(Service(self._connection_handler, port))
         self.app.run()
 
+
 def ident(*args):
     return args
 
@@ -110,18 +120,19 @@ def storage_command(f):
 
     @storage_command
     def command_set(self, command_name, key, flags, exptime, value, *opts):
-    
+
     Expected return type: one of STORAGE_STATUS_*
     """
 
     def process_storage_status(res):
-        if res not in STORAGE_STATUSES: 
+        if res not in STORAGE_STATUSES:
             raise ServerError("internal error")
         else:
             send(res + "\r\n")
 
     def add_value(*elements):
-        ev, msg = first(receive = int(elements[5])+2, sleep = VALUE_READ_TIMEOUT)
+        ev, msg = first(
+            receive=int(elements[5]) + 2, sleep=VALUE_READ_TIMEOUT)
         if ev == 'sleep':
             raise ClientError("reading timed out")
         else:
@@ -129,7 +140,9 @@ def storage_command(f):
             new_elements[5] = msg[:-2]
             return tuple(new_elements)
 
-    return _register_command(f, process_storage_status, process_values=add_value, min_args=5)
+    return _register_command(
+        f, process_storage_status, process_values=add_value, min_args=5)
+
 
 def retrieval_command(f):
     """Decorator for retrieval commands (get...)
@@ -148,15 +161,21 @@ def retrieval_command(f):
             # format each returned value
             for row in res:
                 if type(row) != tuple or len(row) < 3:
-                    log.crit("Engine didn't return proper tuple, but <%s> - skipping" % (row,))
+                    log.crit(
+                        "Engine didn't return proper tuple, but "
+                        "<%s> - skipping"
+                        % (row,))
                 elif row[2] is not None:
-                    send('VALUE %s %s %i%s\r\n%s\r\n' % (row[0], row[1], len(row[2]), '' if len(row)<4 else ' '+row[3], row[2]))
+                    send('VALUE %s %s %i%s\r\n%s\r\n' %
+                        (row[0], row[1], len(row[2]), ''
+                         if len(row) < 4 else ' ' + row[3], row[2]))
                 else:
                     pass
                     # key not present, no answer
             send('END\r\n')
-                    
+
     return _register_command(f, format_values, min_args=2)
+
 
 def deletion_command(f):
     """Decorator for deletion commands (delete...)
@@ -164,14 +183,13 @@ def deletion_command(f):
 
     @deletion_command
     def command_delete(self, command_name, key, *opts):
-    
+
     Expected return type: one of DELETION_STATUS_*
     """
 
     def process_result(res):
-        if res not in DELETION_STATUSES: 
+        if res not in DELETION_STATUSES:
             raise ServerError("internal error")
         else:
             send(res + "\r\n")
     return _register_command(f, process_result, min_args=2)
-
