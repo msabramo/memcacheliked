@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
 setup(name='memcacheliked',
         version='0.2',
         description='Simple framework for writing daemons using the memcache interface for storing data',
