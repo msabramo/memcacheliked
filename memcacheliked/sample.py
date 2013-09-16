@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from . import Memcacheliked, retrieval_command, storage_command, deletion_command, STORAGE_STATUS_STORED, DELETION_STATUS_DELETED, DELETION_STATUS_NOT_FOUND
+from memcacheliked import Memcacheliked, retrieval_command, storage_command, deletion_command, STORAGE_STATUS_STORED, DELETION_STATUS_DELETED, DELETION_STATUS_NOT_FOUND
 
 
 class SampleServer(Memcacheliked):
