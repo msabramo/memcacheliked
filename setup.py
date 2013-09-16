@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 setup(name='memcacheliked',
-        version='0.1',
+        version='0.2',
         description='Simple framework for writing daemons using the memcache interface for storing data',
         author='Vicious Red Beam',
         author_email='vicious.red.beam@gmail.com',
