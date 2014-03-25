@@ -6,5 +6,5 @@ install: python setup.py install
 before_script: pip install nose python-memcached
 script: nosetests -w tests -v
 branches:
-  only:
-    - travis
+  except:
+    - master
