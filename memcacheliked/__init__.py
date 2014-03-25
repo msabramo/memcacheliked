@@ -21,7 +21,7 @@
 # THE SOFTWARE.
 
 from functools import wraps
-from diesel import Application, Service, Loop, first, until, sleep, send, log
+from diesel import Application, Service, first, send, log
 import traceback
 
 STORAGE_STATUS_STORED = 'STORED'
